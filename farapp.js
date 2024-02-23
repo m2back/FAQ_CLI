@@ -6,27 +6,23 @@ const term = require("terminal-kit").terminal;
 //Basic Configs
 const faqFile = JSON.parse(fs.readFileSync("faq.json", "utf8"));
 const faqs = faqFile.faqs;
-const questions = faqs.map((faq) => faq.question);
-const answers = faqs.map((faq) => faq.answer);
 
 /**********************************Main Functions***************************************/
-const findAnswer = (query) => {
-  // const matches = stringSimilarity.findBestMatch(query, questions);
-  let question = questions.find((q, index) => {
-    if (q.toLowerCase().includes(query.toLowerCase())) {
-      answer = answers[index];
-      return true;
-    }
+const findAnswer = (query_raw) => {
+  query = query_raw.toLocaleLowerCase();
+
+  let matched_faq = faqs.find((faq) => {
+    return faq.question.toLocaleLowerCase().includes(query);
   });
-  if (!question)
+
+  if (!matched_faq) {
     return {
       question: "Couldn't find any related question!",
       answer: "N/A",
     };
-  return {
-    question: question,
-    answer: answer,
-  };
+  }
+
+  return matched_faq;
 };
 
 /**********************************Terminal-Kit Pages***********************************/
